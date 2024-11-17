@@ -1,24 +1,363 @@
 <!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="importmap"> 
+          { 
+              "imports": { 
+                  "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js", 
+                  "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/" 
+              } 
+          }
+    </script>
+    <style>
+      body, html {
+        height: 100%;
+        margin: 0;
+        font: 400 15px/1.8 "Lato", sans-serif;
+        color: #777;
+      }
 
-<html lang="en">
-    <head>
-        <script type="importmap"> 
-            { 
-                "imports": { 
-                    "three": "https://cdn.jsdelivr.net/npm/three@v0.149.0/build/three.module.js", 
-                    "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.149.0/examples/jsm/" 
-                } 
-            }
-        </script>
+      .bgimg-1 {
+        position: relative;
+        height: 120vh;
+        background-attachment: fixed;
+        overflow: hidden;
+      }
+
+      #threejs-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* puts it behind */
+      }
+
+
+      .bgimg-3 {
+        position: relative;
+        opacity: 0.65;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+      }
+
+      .bgimg-2 {
+        background-image: url("files/farmbgstockphoto.jpg");
+        min-height: 100vh;
+        position: relative;
+        opacity: 0.75;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      /*for three.js bg*/
+      .bgimg-5 { 
+        background-image: url("files/skybg.jpg");
+        min-height: 140%;
+        position: relative;
+        opacity: 0.65;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      #threejs-bg canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 140vh;
+      }
+      /*end of for three.js bg*/
+
+      .bgimg-6 {
+        background-image: url("files/to-do_figma.png");
+        min-height: 140%;
+        position: relative;
+        opacity: 0.65;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+      }
+
+      .caption {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        color: #000;
+      }
+
+      .project-caption { /*this one's more in the middle*/
+        position: absolute;
+        left: 0;
+        top: 20%;
+        width: 100%;
+        text-align: center;
+        color: #000;
+      }
+
+      .desc {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        text-align: justify !important;
+        padding: 80px;
+        font-size: 25px;
+        letter-spacing: 5px;
+      }
+
+      .project-desc {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        text-align: justify !important;
+        padding: 80px;
+        font-size: 15px;
+        letter-spacing: 2px;
+        color: white;
+        background-color: black;
+      }
+
+      .top-desc {
+        top: 50%;
+      }
+
+      .middle-desc {
+       top: 50%;
+      }
+
+      .bottom-desc {
+        top: 100%;
+      }
+
+      /*bouncing but only for image*/
+      .caption img {
+        height: auto;
+        animation: bounce 2s infinite;
+      }
+
+      .project-caption img { 
+        height: auto;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      /*</image bounce>*/
+
+
+      /*div caption content*/
+      .custom-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: blue;
+      }
+
+
+      /*align*/
+      .right {
+        position: absolute;
+        right: 0px;
+        padding: 10px;
+      }
+
+
+
+      /*</div caption content>*/
+
+      /* turn off parallax scrolling for tablets and phones */
+      @media only screen and (max-device-width: 1024px) {
+        .bgimg-1, .bgimg-2, .bgimg-3 {
+        background-attachment: scroll;
+        }
+      }
+
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  </head>
+  <body>
+    <script type="module" src="main.js"></script>
+    <script type="module" src="parallax2.js"></script>
+    <script type="module" src="bgthree.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+
         
-        <meta charset="utf-8">
-        <title>three.js app testing</title>
-        <style> body { margin: 0; } </style>
-    </head>
-    <body>
-        <script type="module" src="main.js">
 
-        </script>
+    <!--Header section; portfolio title & intro-->
+    <div class="bgimg-1">
+      <div id="threejs-header"></div>
 
-    </body>
+      <!--Has image and scroll down text in front of title
+      note: the one on the bottom is on the top, so it's layered-->
+      <div class="container caption">
+        <div class="row">
+          <div class="col-4">
+            <div class="desc">
+              <img class="right" src="files/profilepic.png" alt="my face" style="width: 200px;"> 
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="desc">
+              </br>
+              <span>Hi, I'm Catherine Ong.</span>
+              </br>
+              </br>
+              <span>I design, develop, and deliver.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="caption">
+        <img src="files/teststar.png" alt="Scroll Down Icon" style="width: 100px; height: auto;">
+      </div>
+    </div>
+
+
+
+
+
+
+    <!--project1: chicken game 2020 lowres jam-->
+    <div class="bgimg-2">
+      <div class="container project-caption">
+        <div class="row">
+
+          <div class="col-3">
+          </div>
+          
+          <div class="col-3">
+            <div class="project-desc right">
+              <span><b>CHICKEN: THE GAME</b></span>
+              <span>A web-based game I made in 2020 for the 2020LOWRESJAM. It is mobile/touchscreen-friendly.</span>
+            </div>
+
+          </div>
+          <div class="col-6">
+
+            <iframe id="" src="chicken_thegame/index.html" name="" width="320" height="320" frameborder="0" marginheight="0" scrolling="no"></iframe>
+
+
+          </div>
+        </div>
+      </div>
+      
+      <div class="project-caption">
+        <img src="files/teststar.png" alt="Scroll Down Icon" style="width: 100px; height: auto;">
+      </div>
+    </div>
+
+
+    <!--project3: To-do app-->
+    <div class="bgimg-6">
+      <div class="container project-caption">
+        <div class="row">
+
+          <div class="col-2">
+          </div>
+          <div class="col-4">
+              <video width="225" height="500" autoplay muted preload="auto" loop poster="video-poster.jpg">
+      <source src="files/assignment-to-do-video.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+              </video>
+
+          </div>
+
+          <div class="col-5">
+            <div class="row">
+            
+                <!--<div class="col-4">-->
+                <div class="project-desc right row">
+                  <span><b>Assignment To-do App</b></span>
+                  <span>It was an app that aimed to provide an easy way to keep track of assignments, their weight, and their deadlines. I made a figma prototype for this, before implementing it as a functional Android app using Kotlin and Android studio. This was made in 2022.</span>
+                <!--</div>-->
+                </div>
+                
+                <div class="row">
+                  <iframe class="bottom-desc" style="border: 1px solid rgba(0, 0, 0, 0.1); margin-top: 120px;" width="475" height="380" src="https://embed.figma.com/proto/yMw1AveF999BFrvaQxY0sR/prototype-todo-app?node-id=2-3&node-type=frame&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=2%3A3&embed-host=share" allowfullscreen></iframe>
+                </div>
+            </div>
+          </div>
+          
+          <div class="col-1">
+          </div>
+
+          <div class="project-caption">
+            <img src="files/teststar.png" alt="Scroll Down Icon" style="width: 100px; height: auto;">
+          </div>
+
+        </div>
+      </div>
+      
+    </div>
+
+
+
+    <!--project2: UCD solar thing-->
+    <div class="bgimg-5">
+      <div class="container project-caption">
+      <div id="threejs-bg"> </div>
+        <div class="row">
+
+          <div class="col-2">
+          </div>
+          
+          <div class="col-6">
+
+            <iframe id="" src="UCD_solarenergyapp-prototype_v3/index.html" name="" width="360" height="540" frameborder="0" marginheight="0" scrolling="no"></iframe>
+          </div>
+
+          <div class="col-4">
+            <div class="project-desc right">
+              <span><b>SOLAR ENERGY APP PROTOTYPE</b></span>
+              <span>A web-based rough prototype I made for the unit COS20001 (User-centered Design) in 2022. It is mobile/touchscreen-friendly.</span>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+      
+      <div class="project-caption">
+        <img src="files/teststar.png" alt="Scroll Down Icon" style="width: 100px; height: auto;">
+      </div>
+    </div>
+
+
+    <div style="position:relative;">
+      <div style="color:#ddd;background-color:#282E34;text-align:center;padding:50px 80px;text-align: justify;">
+      <p>Everything here was made with bootstrap, Three.js, and the usual (Javascript, HTML, CSS). All models are made by me (Catherine Azelia Ong).</p>
+      </div>
+    </div>
+
+
+
+  </body>
 </html>
+
